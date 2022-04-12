@@ -18,7 +18,7 @@ void testVariousSorting()
 
     vector<int> testData;
 
-    int testSize = dice();
+    int testSize = 30;
     for( int i = 0; i < testSize; ++i )
     {
         testData.push_back( dice() );
@@ -54,7 +54,7 @@ void testVariousSorting()
 
     Sort::shuffle( testData );
 
-    std::cout << "Quick sort\n";
+    std::cout << "quickSort_Lomuto\n";
     Sort::quickSort_Lomuto( testData, 0, testData.size() - 1 );
     Sort::printResult( testData );
 
@@ -63,12 +63,27 @@ void testVariousSorting()
     std::cout << "quickSort_Hoare\n";
     Sort::quickSort_Hoare( testData, 0, testData.size() - 1 );
     Sort::printResult( testData );
+
+    Sort::shuffle( testData );
+
+    std::cout << "quickSort_with_insertionSort\n";
+    Sort::quickSort_with_insertionSort( testData, 0, testData.size() - 1 );
+    Sort::printResult( testData );
+
+    Sort::shuffle( testData );
+
+    std::cout << "quickSort_std_async\n";
+    Sort::quickSort_std_async( testData, 0, testData.size() - 1 );
+    Sort::printResult( testData );
 }
 
 int main()
 {
     //Sort::testShuffle();
-    //testVariousSorting();
+
+    testVariousSorting();
+
+    cout << endl;
 
     Sort::test_Lomuto_and_Hoare();
 }

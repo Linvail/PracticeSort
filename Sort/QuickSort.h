@@ -5,7 +5,7 @@ using namespace std;
 
 namespace Sort
 {
-
+	//! Don't use.
 	void quickSort_Lomuto
 		(
 		vector<int>& aInput,
@@ -13,6 +13,7 @@ namespace Sort
 		int aEnd
 		);
 
+	//! Faster than quickSort_Lomuto
 	void quickSort_Hoare
 		(
 		vector<int>& aInput,
@@ -20,14 +21,16 @@ namespace Sort
 		int aEnd
 		);
 
-	void quickSort_std_async
+	//! Faster than quickSort_Hoare
+	void quickSort_with_insertionSort
 		(
 		vector<int>& aInput,
 		int aBegin,
 		int aEnd
 		);
 
-	void quickSort_with_insertionSort
+	//! Fastest.
+	void quickSort_std_async
 		(
 		vector<int>& aInput,
 		int aBegin,

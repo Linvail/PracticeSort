@@ -134,6 +134,7 @@ namespace Sort
 	}
 
 	//! Use std::async for the recursive calls.
+	//! This is faster than all non-async functions.
 	void quickSort_std_async
 		(
 		vector<int>& aInput,
@@ -146,14 +147,15 @@ namespace Sort
 			int pivotIdx = partition_Hoare( aInput, aBegin, aEnd );
 
 			auto policy = std::launch::async;
-			auto f1 = std::async( policy, [&aInput, aBegin, pivotIdx] { quickSort_Hoare( aInput, aBegin, pivotIdx ); } );
-			auto f2 = std::async( policy, [&aInput, pivotIdx, aEnd] { quickSort_Hoare( aInput, pivotIdx + 1, aEnd ); } );
+			auto f1 = std::async( policy, [&aInput, aBegin, pivotIdx] { quickSort_with_insertionSort( aInput, aBegin, pivotIdx ); } );
+			auto f2 = std::async( policy, [&aInput, pivotIdx, aEnd] { quickSort_with_insertionSort( aInput, pivotIdx + 1, aEnd ); } );
 			f1.wait();
 			f2.wait();
 		}
 	}
 
 	//! Based on quickSort_Hoare. When count is less than 8, just do the insertion sort.
+	//! This is faster than quickSort_Hoare.
 	void quickSort_with_insertionSort
 		(
 		vector<int>& aInput,
@@ -185,7 +187,7 @@ namespace Sort
 		std::uniform_int_distribution<int> distribution( 0, 2000000 );
 		auto dice = std::bind( distribution, generator );
 
-		vector<int> testData( 30000, 100 );
+		vector<int> testData( 3000, 100 );
 
 		using std::chrono::high_resolution_clock;
 		using std::chrono::duration_cast;
@@ -203,12 +205,12 @@ namespace Sort
 		std::cout << "quickSort_Hoare: " << ms_int.count() << "ms\n";
 
 		t1 = high_resolution_clock::now();
-		//quickSort_Lomuto( testData, 0, testData.size() - 1 );
-		quickSort_with_insertionSort( testData, 0, testData.size() - 1 );
+		quickSort_Lomuto( testData, 0, testData.size() - 1 );
+		//quickSort_with_insertionSort( testData, 0, testData.size() - 1 );
 		t2 = high_resolution_clock::now();
 		ms_int = duration_cast<milliseconds>( t2 - t1 );
-		//std::cout << "quickSort_Lomuto: " << ms_int.count() << "ms\n";
-		std::cout << "quickSort_with_insertionSort: " << ms_int.count() << "ms\n";
+		std::cout << "quickSort_Lomuto: " << ms_int.count() << "ms\n";
+		//std::cout << "quickSort_with_insertionSort: " << ms_int.count() << "ms\n";
 		std::cout << "quickSort_Lomuto easily causes stack overflow when there are many identical items..\nOn the other hand, quickSort_Hoare works fine.\n";
 
 		cout << endl;
@@ -238,10 +240,11 @@ namespace Sort
 
 		t1 = high_resolution_clock::now();
 		//quickSort_Lomuto( testData3, 0, testData3.size() - 1 );
-		std:sort( testData3.begin(), testData3.end() );
+		//std:sort( testData3.begin(), testData3.end() );
+		quickSort_with_insertionSort( testData3, 0, testData3.size() - 1 );
 		t2 = high_resolution_clock::now();
 		ms_int = duration_cast<milliseconds>( t2 - t1 );
-		std::cout << "std:sort: " << ms_int.count() << "ms\n";
+		std::cout << "quickSort_with_insertionSort: " << ms_int.count() << "ms\n";
 
 		cout << endl;
 
@@ -257,9 +260,6 @@ namespace Sort
 			printResult( testData );
 			printResult( testData2 );
 		#endif
-
-
-
 	}
 
 } // namespace Sort
